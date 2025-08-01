@@ -12,8 +12,17 @@ const userRoutes = require("./routes/user");
 const cors = require("cors");
 
 const corsOptions = {
-  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176'],
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:5175",
+    "http://localhost:5176",
+    "https://review-frontend-vercel-9x9n.vercel.app",
+    "https://review-frontend.vercel.app",
+    "https://review-frontend-9x9n.vercel.app",
+    "https://review-frontend-9x9n-git-main-review-backend-vercel.vercel.app",
+  ],
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
 app.use(cors(corsOptions));
@@ -22,7 +31,7 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-    res.send("Hello World");
+  res.send("Hello World");
 });
 
 app.use("/api/admin", adminRoutes);
