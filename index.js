@@ -1,33 +1,43 @@
-const express = require("express");
-const app = express();
-const PORT = 3210;
-
 require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
 
 const adminRoutes = require("./routes/admin");
 const symbolRoutes = require("./routes/symbol");
 const signalsRoutes = require("./routes/signals");
 const userRoutes = require("./routes/user");
 
-const cors = require("cors");
+const app = express();
+const PORT = 3210;
 
 const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "http://localhost:5175",
-    "http://localhost:5176",
-    "https://review-frontend-vercel-9x9n.vercel.app",
-    "https://review-frontend.vercel.app",
-    "https://review-frontend-9x9n.vercel.app",
-    "https://review-frontend-9x9n-git-main-review-backend-vercel.vercel.app",
-  ],
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "http://localhost:5175",
+      "http://localhost:5176",
+      "https://review-frontend-vercel-9x9n.vercel.app",
+      "https://review-frontend.vercel.app",
+      "https://review-frontend-9x9n.vercel.app",
+      "https://review-frontend-9x9n-git-main-review-backend-vercel.vercel.app",
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // <== Handle preflight CORS
 
-const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
