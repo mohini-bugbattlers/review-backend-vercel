@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  api:
+    image: node:18-alpine
+    container_name: api
+    ports:
+      - 3210:3210
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: bash -c "npm install && npm i -g pm2 && pm2-runtime start ecosystem.config.js --env production"
+
+  db:
+    image: mysql:8.0
+    container_name: db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=azuraDB
+      - MYSQL_USER=appuser
+      - MYSQL_PASSWORD=dOcK3rI
+    ports:
+      - 3306:3306
+    volumes:
+      - ./data:/var/lib/mysql
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - 8080:80
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+      - PMA_USER=appuser
+      - PMA_PASSWORD=dOcK3rI
+    depends_on:
+      - db
+    restart: always
+    
+
